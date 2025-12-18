@@ -2,39 +2,43 @@ name: Build Android APK
 
 on:
   push:
-    branches: [ main ] # Se ejecuta cada vez que haces push a main
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # Actualizado a v4
       - name: Checkout del código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
+      # Actualizado a v4
       - name: Configurar Java 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
+      # Actualizado a v4
       - name: Configurar Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20' # Usamos una versión de Node más actual
 
       - name: Instalar dependencias
         run: npm install
 
-      # Si usas React Native puro:
-      - name: Generar APK (React Native)
+      # Este paso asume que tienes una carpeta /android en tu proyecto (React Native)
+      - name: Generar APK de prueba (Debug)
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleRelease
+          ./gradlew assembleDebug
 
+      # Actualizado a v4 (Aquí estaba el error principal)
       - name: Subir el APK generado
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: app-release
-          path: android/app/build/outputs/apk/release/app-release.apk
+          name: app-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
